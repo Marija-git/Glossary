@@ -13,6 +13,10 @@ namespace Glossary.DataAccess.AppData.Configurations
             builder.Property(x => x.Term).HasMaxLength(50).IsRequired();
             builder.Property(x => x.Definition).HasMaxLength(2000).IsRequired();
             builder.Property(x => x.Status).HasDefaultValue(Status.Draft).IsRequired();
+
+            builder.HasOne(x => x.Author)
+                 .WithMany(a => a.OwnedGlossaryTerms)
+                 .HasForeignKey(x => x.AuthorId);
         }
     }
 }
