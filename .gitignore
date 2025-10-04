@@ -1,0 +1,60 @@
+# =====================
+# Visual Studio / .NET
+# =====================
+
+## Build folders
+bin/
+obj/
+out/
+
+## User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Auto-generated code
+*.g.cs
+*.designer.cs
+*.generated.cs
+
+## App settings (sensitive info)
+appsettings.json
+appsettings.*.json
+
+## NuGet
+*.nupkg
+packages/
+project.lock.json
+project.fragment.lock.json
+
+## Logs
+*.log
+
+## IDE folders
+.vscode/
+.idea/
+
+## OS files
+*.DS_Store
+Thumbs.db
+
+# =====================
+# Optional: JetBrains Rider
+# =====================
+.idea/
+*.sln.iml
+
+# =====================
+# Optional: ASP.NET
+# =====================
+*.vs/
+*.webproj
+
+# =====================
+# Others
+# =====================
+*.vspscc
+*.vssscc
+_ReSharper*/
+*_ReSharper*/
