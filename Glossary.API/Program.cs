@@ -1,5 +1,6 @@
 
 
+using Glossary.API.Middlewares;
 using Glossary.BusinessLogic.Services;
 using Glossary.BusinessLogic.Services.Interfaces;
 using Glossary.DataAccess.AppData;
@@ -57,6 +58,7 @@ builder.Services.AddSwaggerGen(c =>
        });
 });
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddScoped<ErrorHandlingMiddleware>();
 
 builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<GlossaryDbContext>();
@@ -67,6 +69,7 @@ builder.Services.AddIdentity<User, IdentityRole>()
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+app.UseMiddleware<ErrorHandlingMiddleware>();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

@@ -1,4 +1,5 @@
-﻿using Glossary.BusinessLogic.Services.Interfaces;
+﻿using Glossary.BusinessLogic.Exceptions;
+using Glossary.BusinessLogic.Services.Interfaces;
 using Glossary.DataAccess.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -20,21 +21,37 @@ namespace Glossary.BusinessLogic.Services
             _config = config;
         }
 
-        public async Task<IdentityResult> Register(string username, string password,string email)
+        public async Task Register(string username, string password,string email)
         {
+            var existingUser = await _userManager.FindByNameAsync(username);
+            if (existingUser != null)
+                throw new BadRequestException($"Username '{username}' is already taken.");
+
             var user = new User
             {
                 UserName = username,
                 Email = email
             };
-            return await _userManager.CreateAsync(user, password);
+
+            var result = await _userManager.CreateAsync(user, password);
+
+            if (!result.Succeeded)
+            {
+                var errors = string.Join("; ", result.Errors.Select(e => e.Description));
+                throw new BadRequestException(errors);
+            }
         }
 
         public async Task<string> Login(string username, string password)
-        {
+        {            
             var user = await _userManager.FindByNameAsync(username);
-            if (user == null || !await _userManager.CheckPasswordAsync(user, password))
-                return null;                                                                //handle err
+            if (user == null)
+                throw new NotFoundException(nameof(User), username);
+
+            var validPassword = await _userManager.CheckPasswordAsync(user, password);
+            if (!validPassword)
+                throw new UnauthorizedException("Invalid username or password.");
+
             return await GenerateToken(user);
         }
 
@@ -43,7 +60,6 @@ namespace Glossary.BusinessLogic.Services
             var claims = new List<Claim>
         {
             new Claim(ClaimTypes.NameIdentifier, user.Id),
-            new Claim(ClaimTypes.Name, user.UserName)
         };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));

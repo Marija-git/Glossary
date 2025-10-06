@@ -18,16 +18,14 @@ namespace Glossary.API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDtoRequest dto)
         {
-            var result = await _authService.Register(dto.Username, dto.Password,dto.Email);
-            if (!result.Succeeded) return BadRequest(result.Errors);   //handle err
-            return Ok();
+            await _authService.Register(dto.Username, dto.Password,dto.Email);
+            return Ok(new { message = "User registered successfully." });
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDtoRequest dto)
         {
             var token = await _authService.Login(dto.Username, dto.Password);
-            if (token == null) return Unauthorized();                                   //handle err
             return Ok(new { token });
         }
     }
