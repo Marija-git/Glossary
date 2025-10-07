@@ -1,10 +1,13 @@
 
 
 using Glossary.API.Middlewares;
+using Glossary.API.Profiles;
 using Glossary.BusinessLogic.Services;
 using Glossary.BusinessLogic.Services.Interfaces;
 using Glossary.DataAccess.AppData;
 using Glossary.DataAccess.Entities;
+using Glossary.DataAccess.Repositories;
+using Glossary.DataAccess.Repositories.Interfaces;
 using Glossary.DataAccess.SeedData;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -16,15 +19,23 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddDbContext<GlossaryDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("GlossaryDb")));
-builder.Services.AddScoped<IDataSeeder, DataSeeder>();
 builder.Services.AddScoped<IDataSeederService, DataSeederService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IGlossaryTermsRepository, GlossaryTermsRepository>();
+builder.Services.AddScoped<IGlossaryTermsService, GlossaryTermsService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddControllers();
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+builder.Services.AddDbContext<GlossaryDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("GlossaryDb")));
+builder.Services.AddScoped<IDataSeeder, DataSeeder>();
+builder.Services.AddIdentity<User, IdentityRole>()
+    .AddEntityFrameworkStores<GlossaryDbContext>();
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -38,38 +49,35 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
         };
     });
+builder.Services.AddAuthorization();
+builder.Services.AddScoped<ErrorHandlingMiddleware>();
+builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
+builder.Services.AddEndpointsApiExplorer();
 //Swagger konfiguracija za JWT
 builder.Services.AddSwaggerGen(c =>
-   {
-       c.AddSecurityDefinition("bearerAuth", new OpenApiSecurityScheme
-       {
-           Type = SecuritySchemeType.Http,
-           Scheme = "Bearer"
-       });
-       c.AddSecurityRequirement(new OpenApiSecurityRequirement
+{
+    c.AddSecurityDefinition("bearerAuth", new OpenApiSecurityScheme
+    {
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer"
+    });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
        {
         {
             new OpenApiSecurityScheme
             {
                 Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "bearerAuth" }
             },
-           [] 
+           []
         }
        });
 });
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddScoped<ErrorHandlingMiddleware>();
-
-builder.Services.AddIdentity<User, IdentityRole>()
-    .AddEntityFrameworkStores<GlossaryDbContext>();
-
-//builder.Services.AddAuthorization();
 
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-app.UseMiddleware<ErrorHandlingMiddleware>();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -89,11 +97,12 @@ using (var scope = app.Services.CreateScope())
     }
 
 }
-
+app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers();
 
 app.Run();

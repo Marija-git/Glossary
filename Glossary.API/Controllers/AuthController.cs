@@ -1,4 +1,4 @@
-﻿using Glossary.API.DTOs;
+﻿using Glossary.API.DTOs.Request;
 using Glossary.BusinessLogic.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 

@@ -6,6 +6,7 @@ namespace Glossary.API.Middlewares
 {
     public class ErrorHandlingMiddleware(ILogger<ErrorHandlingMiddleware> logger) : IMiddleware
     {
+
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
             try
@@ -27,6 +28,10 @@ namespace Glossary.API.Middlewares
             catch (UnauthorizedException unauthorizedEx)
             {
                 await HandleExceptionAsync(context, HttpStatusCode.Unauthorized, unauthorizedEx.Message);
+            }
+            catch (ConflictException conflictEx)
+            {
+                await HandleExceptionAsync(context, HttpStatusCode.Conflict, conflictEx.Message);
             }
             catch (Exception ex)
             {

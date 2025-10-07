@@ -1,0 +1,11 @@
+﻿using Glossary.DataAccess.Entities;
+
+namespace Glossary.DataAccess.Repositories.Interfaces
+{
+    public interface IGlossaryTermsRepository
+    {
+        Task Create(GlossaryTerm term);
+        Task<GlossaryTerm?> GetById(int id);
+        Task<GlossaryTerm?> GetByTerm(string term);
+    }
+}

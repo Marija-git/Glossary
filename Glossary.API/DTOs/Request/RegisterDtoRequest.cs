@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Glossary.API.DTOs
+namespace Glossary.API.DTOs.Request
 {
     public class RegisterDtoRequest
     {

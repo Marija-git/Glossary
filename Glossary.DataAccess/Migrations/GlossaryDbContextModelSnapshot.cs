@@ -54,7 +54,8 @@ namespace Glossary.DataAccess.Migrations
                     b.HasIndex("AuthorId");
 
                     b.HasIndex("Term")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("\"Term\" <> ''");
 
                     b.ToTable("GlossaryTerms");
                 });

@@ -9,7 +9,7 @@ namespace Glossary.DataAccess.AppData.Configurations
         public void Configure(EntityTypeBuilder<GlossaryTerm> builder)
         {
             builder.HasKey(x => x.Id);
-            builder.HasIndex(x => x.Term).IsUnique();
+            builder.HasIndex(x => x.Term).IsUnique().HasFilter("\"Term\" <> ''"); ;
             builder.Property(x => x.Term).HasMaxLength(50).IsRequired();
             builder.Property(x => x.Definition).HasMaxLength(2000).IsRequired();
             builder.Property(x => x.Status).HasDefaultValue(Status.Draft).IsRequired();

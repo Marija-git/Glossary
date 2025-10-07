@@ -1,0 +1,42 @@
+﻿using AutoMapper;
+using Glossary.API.DTOs.Request;
+using Glossary.API.DTOs.Response;
+using Glossary.BusinessLogic.Services.Interfaces;
+using Glossary.DataAccess.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+
+namespace Glossary.API.Controllers
+{
+    [Route("api/GlossaryTerms")]
+    [ApiController]
+    [Authorize]
+    public class GlossaryTermsController : ControllerBase
+    {
+        private readonly IGlossaryTermsService _glossaryTermsService;
+        private readonly IMapper _mapper;
+
+
+        public GlossaryTermsController(IGlossaryTermsService glossaryTermsService, IMapper mapper)
+        {
+            _glossaryTermsService = glossaryTermsService;
+            _mapper = mapper;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] GlossaryTermDtoRequest dto)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var glossaryTerm = _mapper.Map<GlossaryTerm>(dto);
+            await _glossaryTermsService.Create(glossaryTerm, userId);
+            return CreatedAtAction(nameof(GetById), new { id = glossaryTerm.Id }, glossaryTerm);
+        }
+
+        [HttpGet("id")]
+        public async Task<GlossaryTermDtoResponse> GetById(int id)
+        {
+            return _mapper.Map<GlossaryTermDtoResponse>(await _glossaryTermsService.GetById(id));
+        }
+    }
+}
