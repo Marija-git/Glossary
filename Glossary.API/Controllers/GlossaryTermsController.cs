@@ -38,5 +38,13 @@ namespace Glossary.API.Controllers
         {
             return _mapper.Map<GlossaryTermDtoResponse>(await _glossaryTermsService.GetById(id));
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            await _glossaryTermsService.Delete(id, userId);
+            return NoContent();
+        }
     }
 }

@@ -27,5 +27,11 @@ namespace Glossary.DataAccess.Repositories
         {
             return await _context.GlossaryTerms.FirstOrDefaultAsync(t => t.Term == term);
         }
+
+        public async Task Delete(GlossaryTerm term)
+        {
+            _context.Remove(term);
+            await _context.SaveChangesAsync();
+        }
     }
 }

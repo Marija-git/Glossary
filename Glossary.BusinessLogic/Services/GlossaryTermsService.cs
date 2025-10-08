@@ -26,6 +26,21 @@ namespace Glossary.BusinessLogic.Services
             await _glossaryTermRepository.Create(term);
         }
 
+        public async Task Delete(int id, string userId)
+        {
+            var glossaryTerm = await GetById(id);
+
+            //resource based auth
+            if (glossaryTerm.AuthorId != userId)
+                throw new ForbidException();
+
+            if(glossaryTerm.Status != Status.Draft)
+                throw new ConflictException("Only terms in Draft state can be deleted.");
+            
+            await _glossaryTermRepository.Delete(glossaryTerm);
+           
+        }
+
         public async Task<GlossaryTerm?> GetById(int id)
         {
             var glossaryTerm =  await _glossaryTermRepository.GetById(id);
