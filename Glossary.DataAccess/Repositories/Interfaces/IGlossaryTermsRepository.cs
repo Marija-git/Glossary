@@ -8,5 +8,6 @@ namespace Glossary.DataAccess.Repositories.Interfaces
         Task<GlossaryTerm?> GetById(int id);
         Task<GlossaryTerm?> GetByTerm(string term);
         Task Delete(GlossaryTerm term);
+        Task Update(GlossaryTerm term);
     }
 }

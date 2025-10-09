@@ -13,6 +13,20 @@ namespace Glossary.BusinessLogic.Services
             _glossaryTermRepository = glossaryTermRepository;
         }
 
+        public async Task Archive(int id, string userId)
+        {
+            var glossaryTerm = await GetById(id);
+
+            if (glossaryTerm.AuthorId != userId)
+                throw new ForbidException();
+
+            if (glossaryTerm.Status != Status.Published)
+                throw new ConflictException("Only terms in Publish state can be archived.");
+
+            glossaryTerm.Status = Status.Archived;
+            await _glossaryTermRepository.Update(glossaryTerm);
+        }
+
         public async Task Create(GlossaryTerm term, string userId)
         {
             if (!string.IsNullOrWhiteSpace(term.Term))
@@ -30,7 +44,6 @@ namespace Glossary.BusinessLogic.Services
         {
             var glossaryTerm = await GetById(id);
 
-            //resource based auth
             if (glossaryTerm.AuthorId != userId)
                 throw new ForbidException();
 

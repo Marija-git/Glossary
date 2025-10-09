@@ -33,5 +33,11 @@ namespace Glossary.DataAccess.Repositories
             _context.Remove(term);
             await _context.SaveChangesAsync();
         }
+
+        public async Task Update(GlossaryTerm term)
+        {
+            _context.GlossaryTerms.Update(term);
+            await _context.SaveChangesAsync();
+        }
     }
 }

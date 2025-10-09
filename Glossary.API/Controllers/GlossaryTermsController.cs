@@ -25,7 +25,7 @@ namespace Glossary.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] GlossaryTermDtoRequest dto)
+        public async Task<IActionResult> Create([FromBody] CreateGlossaryTermDtoRequest dto)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var glossaryTerm = _mapper.Map<GlossaryTerm>(dto);
@@ -33,18 +33,27 @@ namespace Glossary.API.Controllers
             return CreatedAtAction(nameof(GetById), new { id = glossaryTerm.Id }, glossaryTerm);
         }
 
-        [HttpGet("id")]
-        public async Task<GlossaryTermDtoResponse> GetById(int id)
+        [HttpGet("{id}")]
+        public async Task<GlossaryTermDtoResponse> GetById([FromRoute] int id)
         {
             return _mapper.Map<GlossaryTermDtoResponse>(await _glossaryTermsService.GetById(id));
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             await _glossaryTermsService.Delete(id, userId);
             return NoContent();
         }
+
+        [HttpPatch("{id}/archive")]
+        public async Task<IActionResult> Archive([FromRoute] int id)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            await _glossaryTermsService.Archive(id, userId);
+            return NoContent();
+        }
+
     }
 }
