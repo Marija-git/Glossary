@@ -25,12 +25,12 @@ namespace Glossary.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateGlossaryTermDtoRequest dto)
+        public async Task<IActionResult> Create([FromBody] GlossaryTermDtoRequest dto)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var glossaryTerm = _mapper.Map<GlossaryTerm>(dto);
             await _glossaryTermsService.Create(glossaryTerm, userId);
-            return CreatedAtAction(nameof(GetById), new { id = glossaryTerm.Id }, glossaryTerm);
+            return CreatedAtAction(nameof(GetById), new { id = glossaryTerm.Id }, null);
         }
 
         [HttpGet("{id}")]
@@ -52,6 +52,15 @@ namespace Glossary.API.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             await _glossaryTermsService.Archive(id, userId);
+            return NoContent();
+        }
+
+        [HttpPatch("{id}/publish")]
+        public async Task<IActionResult> Publish([FromRoute]int id, [FromBody]GlossaryTermDtoRequest dto)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var glossaryTerm = _mapper.Map<GlossaryTerm>(dto);
+            await _glossaryTermsService.Publish(id, glossaryTerm, userId);
             return NoContent();
         }
 

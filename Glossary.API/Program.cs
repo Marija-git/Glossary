@@ -2,6 +2,7 @@
 
 using Glossary.API.Middlewares;
 using Glossary.API.Profiles;
+using Glossary.BusinessLogic.Configurations;
 using Glossary.BusinessLogic.Services;
 using Glossary.BusinessLogic.Services.Interfaces;
 using Glossary.DataAccess.AppData;
@@ -23,8 +24,9 @@ builder.Services.AddScoped<IDataSeederService, DataSeederService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IGlossaryTermsRepository, GlossaryTermsRepository>();
 builder.Services.AddScoped<IGlossaryTermsService, GlossaryTermsService>();
+builder.Services.Configure<GlossarySettings>(
+    builder.Configuration.GetSection("GlossarySettings"));
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddControllers();
 builder.Services.AddDbContext<GlossaryDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("GlossaryDb")));

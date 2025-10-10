@@ -1,8 +1,8 @@
 ﻿namespace Glossary.API.DTOs.Request
 {
-    public class CreateGlossaryTermDtoRequest
+    public class GlossaryTermDtoRequest
     {
-        public string Term { get; set; } = string.Empty;
-        public string Definition { get; set; } = string.Empty;
+        public string? Term { get; set; } 
+        public string? Definition { get; set; } 
     }
 }

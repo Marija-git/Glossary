@@ -9,7 +9,7 @@ namespace Glossary.API.Profiles
     {
         public MappingProfile()
         {
-            CreateMap<CreateGlossaryTermDtoRequest, GlossaryTerm>()
+            CreateMap<GlossaryTermDtoRequest, GlossaryTerm>()
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => Status.Draft))
                 .ForMember(dest => dest.AuthorId, opt => opt.Ignore())
                 .ForMember(dest => dest.Author, opt => opt.Ignore());

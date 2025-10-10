@@ -8,5 +8,7 @@ namespace Glossary.BusinessLogic.Services.Interfaces
         Task<GlossaryTerm?> GetById(int id);
         Task Delete(int id, string userId);
         Task Archive(int id, string userId);
+        Task Publish(int id, GlossaryTerm term, string userId);
+
     }
 }
