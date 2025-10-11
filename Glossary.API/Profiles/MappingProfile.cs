@@ -16,6 +16,8 @@ namespace Glossary.API.Profiles
 
             CreateMap<GlossaryTerm, GlossaryTermDtoResponse>();
 
+            CreateMap<PaginatedData<GlossaryTerm>, PaginatedData<GlossaryTermDtoResponse>>();
+
         }
 
     }

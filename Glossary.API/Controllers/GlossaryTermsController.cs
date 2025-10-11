@@ -64,5 +64,15 @@ namespace Glossary.API.Controllers
             return NoContent();
         }
 
+        
+        [HttpGet("paginated-data")]
+        [AllowAnonymous]
+        public async Task<PaginatedData<GlossaryTermDtoResponse>> GetPagedTerms(int pageSize = 10, int pageIndex = 1)
+        {
+            var userId = User.Identity?.IsAuthenticated == true ? User.FindFirstValue(ClaimTypes.NameIdentifier) : null;
+            var terms = await _glossaryTermsService.GetGlossaryTermsPaged(userId, pageSize, pageIndex);
+            return _mapper.Map<PaginatedData<GlossaryTermDtoResponse>>(terms);
+        }
+
     }
 }

@@ -9,5 +9,6 @@ namespace Glossary.DataAccess.Repositories.Interfaces
         Task<GlossaryTerm?> GetByTerm(string term);
         Task Delete(GlossaryTerm term);
         Task Update(GlossaryTerm term);
+        Task<PaginatedData<GlossaryTerm>> GetGlossaryTermsPaged(string? userId, int pageSize, int pageIndex);
     }
 }

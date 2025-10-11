@@ -9,6 +9,6 @@ namespace Glossary.BusinessLogic.Services.Interfaces
         Task Delete(int id, string userId);
         Task Archive(int id, string userId);
         Task Publish(int id, GlossaryTerm term, string userId);
-
+        Task<PaginatedData<GlossaryTerm>> GetGlossaryTermsPaged(string? userId, int pageSize, int pageIndex);
     }
 }

@@ -74,7 +74,6 @@ namespace Glossary.BusinessLogic.Services
             return glossaryTerm;
 
         }
-
         public async Task Publish(int id, GlossaryTerm termReq, string userId)
         {
             var glossaryTerm = await GetById(id);
@@ -100,6 +99,12 @@ namespace Glossary.BusinessLogic.Services
             glossaryTerm.Status = Status.Published;
             await _glossaryTermRepository.Update(glossaryTerm);
         }
+
+        public async Task<PaginatedData<GlossaryTerm>> GetGlossaryTermsPaged(string? userId, int pageSize, int pageIndex)
+        {
+            return await _glossaryTermRepository.GetGlossaryTermsPaged(userId, pageSize, pageIndex);
+        }
+
 
         private async Task CheckForbiddenWords(string definition)
         {

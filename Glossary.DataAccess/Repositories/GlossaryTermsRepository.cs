@@ -2,6 +2,7 @@
 using Glossary.DataAccess.Entities;
 using Glossary.DataAccess.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Glossary.DataAccess.Repositories
 {
@@ -38,6 +39,30 @@ namespace Glossary.DataAccess.Repositories
         {
             _context.GlossaryTerms.Update(term);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<PaginatedData<GlossaryTerm>> GetGlossaryTermsPaged(string? userId, int pageSize, int pageIndex)
+        {
+            var baseQuery = _context.GlossaryTerms.AsQueryable();
+            if (!string.IsNullOrEmpty(userId))
+            {
+                baseQuery = baseQuery.Where(t => t.Status == Status.Published || t.AuthorId == userId);
+            }
+            else
+            {
+                baseQuery = baseQuery.Where(t => t.Status == Status.Published);
+            }
+
+            var totalCount = await baseQuery.CountAsync();
+
+            var glossartyTerms = await baseQuery
+            .OrderBy(t => t.Term)
+            .Skip((pageIndex - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+ 
+            var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+            return new PaginatedData<GlossaryTerm>(glossartyTerms, pageIndex, totalPages, totalCount);
         }
     }
 }
