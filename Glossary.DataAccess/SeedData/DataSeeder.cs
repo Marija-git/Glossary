@@ -86,6 +86,19 @@ namespace Glossary.DataAccess.SeedData
                     );
                     await _context.SaveChangesAsync();
                 }
+
+                if (!_context.ForbiddenWords.Any())
+                {
+                    var forbiddenWords = new List<ForbiddenWord>
+                    {
+                        new ForbiddenWord { Word = "lorem" },
+                        new ForbiddenWord { Word = "test" },
+                        new ForbiddenWord { Word = "sample" }
+                    };
+
+                    _context.ForbiddenWords.AddRange(forbiddenWords);
+                    await _context.SaveChangesAsync();
+                }
             }
         }
     }

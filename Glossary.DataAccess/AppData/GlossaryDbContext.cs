@@ -9,12 +9,14 @@ namespace Glossary.DataAccess.AppData
     {
         public GlossaryDbContext(DbContextOptions<GlossaryDbContext> options) : base(options) { }
         public DbSet<GlossaryTerm> GlossaryTerms { get; set; }
+        public DbSet<ForbiddenWord> ForbiddenWords { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.ApplyConfiguration(new GlossaryTermConfiguration());
+            modelBuilder.ApplyConfiguration(new ForbiddenWordConfiguration());
         }
     }
 }

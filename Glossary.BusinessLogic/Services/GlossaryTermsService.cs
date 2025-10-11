@@ -3,9 +3,8 @@ using Glossary.BusinessLogic.Exceptions;
 using Glossary.BusinessLogic.Services.Interfaces;
 using Glossary.DataAccess.Entities;
 using Glossary.DataAccess.Repositories.Interfaces;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
-using System.Runtime;
+using System.Text.RegularExpressions;
 
 namespace Glossary.BusinessLogic.Services
 {
@@ -13,11 +12,14 @@ namespace Glossary.BusinessLogic.Services
     {
         private readonly IGlossaryTermsRepository _glossaryTermRepository;
         private readonly GlossarySettings _glossarySettings;
+        private readonly IForbiddenWordsRepository _forbiddenWordRepository;
         public GlossaryTermsService(IGlossaryTermsRepository glossaryTermRepository,
-            IOptions<GlossarySettings> options)
+            IOptions<GlossarySettings> options,
+            IForbiddenWordsRepository forbiddenWordRepository)
         {
             _glossaryTermRepository = glossaryTermRepository;
             _glossarySettings = options.Value;
+            _forbiddenWordRepository = forbiddenWordRepository;
 
         }
 
@@ -93,11 +95,24 @@ namespace Glossary.BusinessLogic.Services
                 throw new BadRequestException(
                     $"Definition must be at least {_glossarySettings.MinDefinitionLength} characters long.");
 
-            // + forbidden words logic later.
+            await CheckForbiddenWords(glossaryTerm.Definition);
 
             glossaryTerm.Status = Status.Published;
             await _glossaryTermRepository.Update(glossaryTerm);
+        }
 
+        private async Task CheckForbiddenWords(string definition)
+        {
+            var forbiddenWords = await _forbiddenWordRepository.GetAll();
+
+            foreach (var word in forbiddenWords)
+            {
+                var regex = new Regex($@"(?i)(?<!\w){Regex.Escape(word.Word)}(?!\w)");
+                if (regex.IsMatch(definition))
+                {
+                    throw new BadRequestException($"The definition contains a forbidden word: '{word.Word}'.");
+                }
+            }
         }
     }
 }

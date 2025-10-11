@@ -24,6 +24,7 @@ builder.Services.AddScoped<IDataSeederService, DataSeederService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IGlossaryTermsRepository, GlossaryTermsRepository>();
 builder.Services.AddScoped<IGlossaryTermsService, GlossaryTermsService>();
+builder.Services.AddScoped<IForbiddenWordsRepository, ForbiddenWordsRepository>();
 builder.Services.Configure<GlossarySettings>(
     builder.Configuration.GetSection("GlossarySettings"));
 
