@@ -5,9 +5,11 @@ VisualStudioVersion = 17.10.35122.118
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Glossary.API", "Glossary.API\Glossary.API.csproj", "{C7344B7E-B8B0-415D-A91C-26D5B94C81BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Glossary.BusinessLogic", "Glossary.BusinessLogic\Glossary.BusinessLogic.csproj", "{F35C9D75-6AEA-4719-A3B6-D616D27D4934}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Glossary.BusinessLogic", "Glossary.BusinessLogic\Glossary.BusinessLogic.csproj", "{F35C9D75-6AEA-4719-A3B6-D616D27D4934}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Glossary.DataAccess", "Glossary.DataAccess\Glossary.DataAccess.csproj", "{DC4A7FD6-2BCA-4858-900B-DBDEC1682655}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Glossary.DataAccess", "Glossary.DataAccess\Glossary.DataAccess.csproj", "{DC4A7FD6-2BCA-4858-900B-DBDEC1682655}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Glossary.Tests", "..\Glossary.Tests\Glossary.Tests.csproj", "{5D7EF9CC-6237-4FFD-BE39-5198AB3F4661}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{DC4A7FD6-2BCA-4858-900B-DBDEC1682655}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC4A7FD6-2BCA-4858-900B-DBDEC1682655}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC4A7FD6-2BCA-4858-900B-DBDEC1682655}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D7EF9CC-6237-4FFD-BE39-5198AB3F4661}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D7EF9CC-6237-4FFD-BE39-5198AB3F4661}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D7EF9CC-6237-4FFD-BE39-5198AB3F4661}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D7EF9CC-6237-4FFD-BE39-5198AB3F4661}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
