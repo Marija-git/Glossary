@@ -25,12 +25,23 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IGlossaryTermsRepository, GlossaryTermsRepository>();
 builder.Services.AddScoped<IGlossaryTermsService, GlossaryTermsService>();
 builder.Services.AddScoped<IForbiddenWordsRepository, ForbiddenWordsRepository>();
-builder.Services.Configure<GlossarySettings>(
-    builder.Configuration.GetSection("GlossarySettings"));
+
+builder.Services.Configure<GlossarySettings>(builder.Configuration.GetSection("GlossarySettings"));
+
+var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("cors", policy =>
+    {
+        policy.WithOrigins(allowedOrigins)
+              .AllowAnyMethod()
+              .WithHeaders("Content-Type", "Authorization");
+    });
+});
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<GlossaryDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("GlossaryDb")));
+options.UseNpgsql(builder.Configuration.GetConnectionString("GlossaryDb")));
 builder.Services.AddScoped<IDataSeeder, DataSeeder>();
 builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<GlossaryDbContext>();
@@ -103,6 +114,7 @@ using (var scope = app.Services.CreateScope())
 app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseHttpsRedirection();
 app.UseRouting();
+app.UseCors("cors");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
