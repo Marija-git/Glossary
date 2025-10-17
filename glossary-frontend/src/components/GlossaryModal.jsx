@@ -36,6 +36,17 @@ const GlossaryModal = ({
 		handleReset();
 	};
 
+	useEffect(() => {
+		if (initialData) {
+			setFormData({
+				term: initialData.term || "",
+				definition: initialData.definition || "",
+			});
+		} else {
+			setFormData({ term: "", definition: "" });
+		}
+	}, [initialData, show]);
+
 	return (
 		<Modal
 			show={show}
@@ -57,7 +68,6 @@ const GlossaryModal = ({
 							value={formData.term}
 							onChange={handleChange}
 							placeholder='Enter term'
-							required
 						/>
 					</Form.Group>
 
@@ -70,7 +80,6 @@ const GlossaryModal = ({
 							value={formData.definition}
 							onChange={handleChange}
 							placeholder='Enter definition'
-							required
 						/>
 					</Form.Group>
 
