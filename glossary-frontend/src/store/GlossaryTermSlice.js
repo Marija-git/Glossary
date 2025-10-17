@@ -1,0 +1,71 @@
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { getPaginatedGlossaryTerms } from "../services/GlossaryTermService";
+
+export const fetchGlossaryTerms = createAsyncThunk(
+	"glossary/fetchGlossaryTerms",
+	async ({ pageSize = 10, pageIndex = 1, token = null }, thunkAPI) => {
+		const { data, errors } = await getPaginatedGlossaryTerms(
+			pageSize,
+			pageIndex,
+			token
+		);
+		if (errors) return thunkAPI.rejectWithValue(errors);
+		return data;
+	}
+);
+
+const initialState = {
+	glossaryTerms: [],
+	loading: false,
+	error: null,
+	pageIndex: 1,
+	pageSize: 3,
+	totalPages: 0,
+	totalCount: 0,
+};
+
+const glossaryTermsSlice = createSlice({
+	name: "glossaryTerms",
+	initialState,
+	reducers: {
+		clearGlossaryError(state) {
+			state.error = null;
+		},
+		setPageIndex(state, action) {
+			state.pageIndex = action.payload;
+		},
+		resetGlossary(state) {
+			state.glossaryTerms = [];
+			state.pageIndex = 1;
+			state.totalPages = 0;
+			state.totalCount = 0;
+			state.loading = false;
+			state.error = null;
+		},
+	},
+	extraReducers: (builder) => {
+		builder
+			.addCase(fetchGlossaryTerms.pending, (state) => {
+				state.loading = true;
+				state.error = null;
+			})
+			.addCase(fetchGlossaryTerms.fulfilled, (state, action) => {
+				const payload = action.payload || {};
+				state.glossaryTerms = payload.items || [];
+				state.pageIndex = payload.pageIndex || 1;
+				state.totalPages = payload.totalPages || 0;
+				state.totalCount = payload.totalCount || 0;
+				state.loading = false;
+			})
+			.addCase(fetchGlossaryTerms.rejected, (state, action) => {
+				state.loading = false;
+				state.error = Array.isArray(action.payload)
+					? action.payload.join(", ")
+					: action.payload || "Failed to fetch glossary terms.";
+			});
+	},
+});
+
+export const { clearGlossaryError, setPageIndex, resetGlossary } =
+	glossaryTermsSlice.actions;
+export default glossaryTermsSlice.reducer;

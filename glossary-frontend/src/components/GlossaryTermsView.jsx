@@ -4,13 +4,13 @@ import GlossaryModal from "./GlossaryModal";
 import ActionsColumn from "./ActionsColumn";
 import { useSelector } from "react-redux";
 
-const GlossaryList = ({ items }) => {
+const GlossaryList = ({ glossaryTerms }) => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [selectedItem, setSelectedItem] = useState(null);
+	const [selectedglossaryTerms, setSelectedglossaryTerms] = useState(null);
 	const isLoggedIn = useSelector((state) => state.auth.isAuthenticated);
 
-	const handlePublishClick = (item) => {
-		setSelectedItem(item);
+	const handlePublishClick = (term) => {
+		setSelectedglossaryTerms(term);
 		setIsModalOpen(true);
 	};
 
@@ -33,17 +33,17 @@ const GlossaryList = ({ items }) => {
 						</tr>
 					</thead>
 					<tbody>
-						{items.map((item) => (
-							<tr key={item.term}>
-								<td>{item.term}</td>
-								<td>{item.definition}</td>
-								<td>{item.status}</td>
+						{glossaryTerms.map((term) => (
+							<tr key={term.id}>
+								<td>{term.term}</td>
+								<td>{term.definition}</td>
+								<td>{term.status}</td>
 								{isLoggedIn && (
 									<ActionsColumn
-										item={item}
+										glossaryTerms={term}
 										onPublishClick={handlePublishClick}
-										onDelete={(item) => console.log("Deleted:", item)}
-										onArchive={(item) => console.log("Archived:", item)}
+										onDelete={(term) => console.log("Deleted:", term)}
+										onArchive={(term) => console.log("Archived:", term)}
 									/>
 								)}
 							</tr>
@@ -56,7 +56,7 @@ const GlossaryList = ({ items }) => {
 				onClose={() => setIsModalOpen(false)}
 				onSubmit={handlePublish}
 				mode='update'
-				initialData={selectedItem}
+				initialData={selectedglossaryTerms}
 			/>
 		</div>
 	);

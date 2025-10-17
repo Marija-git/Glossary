@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../store/AuthSlice";
+import { resetGlossary } from "../store/GlossaryTermSlice";
 
 const GlossaryNavbar = () => {
 	const isLoggedIn = useSelector((state) => state.auth.isAuthenticated);
@@ -10,6 +11,7 @@ const GlossaryNavbar = () => {
 	const navigate = useNavigate();
 	const handleLogout = () => {
 		dispatch(logout());
+		dispatch(resetGlossary());
 		navigate("/login");
 	};
 	return (
