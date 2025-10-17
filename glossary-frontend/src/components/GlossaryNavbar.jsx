@@ -1,8 +1,17 @@
 import { Navbar, Container, Nav } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../store/AuthSlice";
 
-const GlossaryNavbar = ({ isLoggedIn = true }) => {
+const GlossaryNavbar = () => {
+	const isLoggedIn = useSelector((state) => state.auth.isAuthenticated);
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
+	const handleLogout = () => {
+		dispatch(logout());
+		navigate("/login");
+	};
 	return (
 		<Navbar
 			bg='primary'
@@ -17,11 +26,7 @@ const GlossaryNavbar = ({ isLoggedIn = true }) => {
 
 				<Nav className='ms-auto'>
 					{isLoggedIn ? (
-						<Nav.Link
-							as={Link}
-							to='/login'>
-							Logout
-						</Nav.Link>
+						<Nav.Link onClick={handleLogout}>Logout</Nav.Link>
 					) : (
 						<Nav.Link
 							as={Link}

@@ -2,10 +2,12 @@ import { useState } from "react";
 import { Table } from "react-bootstrap";
 import GlossaryModal from "./GlossaryModal";
 import ActionsColumn from "./ActionsColumn";
+import { useSelector } from "react-redux";
 
-const GlossaryList = ({ items, isLoggedIn = true }) => {
+const GlossaryList = ({ items }) => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [selectedItem, setSelectedItem] = useState(null);
+	const isLoggedIn = useSelector((state) => state.auth.isAuthenticated);
 
 	const handlePublishClick = (item) => {
 		setSelectedItem(item);

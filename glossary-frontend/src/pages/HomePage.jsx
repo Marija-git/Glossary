@@ -2,6 +2,7 @@ import GlossaryList from "../components/GlossaryTermsView";
 import GlossaryCard from "../components/GlossaryCard";
 import GlossaryPagination from "../components/GlossaryPagination";
 import GlossaryNavbar from "../components/GlossaryNavbar";
+import { useSelector } from "react-redux";
 const mockItems = [
 	{
 		term: "API",
@@ -13,7 +14,7 @@ const mockItems = [
 ];
 
 const HomePage = () => {
-	const isLoggedIn = true;
+	const isLoggedIn = useSelector((state) => state.auth.isAuthenticated);
 	return (
 		<>
 			<GlossaryNavbar />

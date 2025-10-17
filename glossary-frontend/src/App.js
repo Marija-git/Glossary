@@ -1,7 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
-import GlossaryNavbar from "./components/GlossaryNavbar";
 import AuthPage from "./pages/AuthPage";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
 	return (
@@ -16,6 +17,10 @@ function App() {
 					element={<HomePage />}
 				/>
 			</Routes>
+			<ToastContainer
+				position='top-right'
+				autoClose={3000}
+			/>
 		</Router>
 	);
 }
