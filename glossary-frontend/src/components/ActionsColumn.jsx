@@ -1,28 +1,16 @@
 import { Button } from "react-bootstrap";
 
 const ActionsColumn = ({ item, onPublishClick, onDelete, onArchive }) => {
-	const handleDelete = () => {
-		if (window.confirm(`Are you sure you want to delete "${item.term}"?`)) {
-			onDelete(item);
-		}
-	};
-
-	const handleArchive = () => {
-		if (window.confirm(`Are you sure you want to archive "${item.term}"?`)) {
-			onArchive(item);
-		}
-	};
-
 	return (
 		<td>
 			<Button
 				className='me-2'
-				onClick={handleArchive}>
+				onClick={() => onArchive(item)}>
 				Archive
 			</Button>
 			<Button
 				className='me-2'
-				onClick={handleDelete}>
+				onClick={() => onDelete(item)}>
 				Delete
 			</Button>
 			<Button onClick={() => onPublishClick(item)}>Publish</Button>

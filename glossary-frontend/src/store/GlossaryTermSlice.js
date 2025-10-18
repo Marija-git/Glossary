@@ -3,6 +3,8 @@ import {
 	getPaginatedGlossaryTerms,
 	createGlossaryTerm,
 	publishGlossaryTerm,
+	deleteGlossaryTerm,
+	archiveGlossaryTerm,
 } from "../services/GlossaryTermService";
 
 export const fetchGlossaryTerms = createAsyncThunk(
@@ -31,6 +33,24 @@ export const publishGlossaryTermThunk = createAsyncThunk(
 	"glossary/publishGlossaryTerm",
 	async ({ id, term, definition, token }, thunkAPI) => {
 		const result = await publishGlossaryTerm(id, term, definition, token);
+		if (result.errors) return thunkAPI.rejectWithValue(result.errors);
+		return result.message;
+	}
+);
+
+export const deleteGlossaryTermThunk = createAsyncThunk(
+	"glossary/deleteGlossaryTerm",
+	async ({ id, token }, thunkAPI) => {
+		const result = await deleteGlossaryTerm(id, token);
+		if (result.errors) return thunkAPI.rejectWithValue(result.errors);
+		return result.message;
+	}
+);
+
+export const archiveGlossaryTermThunk = createAsyncThunk(
+	"glossary/archiveGlossaryTerm",
+	async ({ id, token }, thunkAPI) => {
+		const result = await archiveGlossaryTerm(id, token);
 		if (result.errors) return thunkAPI.rejectWithValue(result.errors);
 		return result.message;
 	}
@@ -117,6 +137,38 @@ const glossaryTermsSlice = createSlice({
 				state.error = Array.isArray(action.payload)
 					? action.payload.join(", ")
 					: action.payload || "Failed to publish glossary term.";
+			})
+
+			// delete
+
+			.addCase(deleteGlossaryTermThunk.pending, (state) => {
+				state.loading = true;
+				state.error = null;
+			})
+			.addCase(deleteGlossaryTermThunk.fulfilled, (state, action) => {
+				state.loading = false;
+				state.error = null;
+			})
+			.addCase(deleteGlossaryTermThunk.rejected, (state, action) => {
+				state.loading = false;
+				state.error = Array.isArray(action.payload)
+					? action.payload.join(", ")
+					: action.payload || "Failed to delete glossary term.";
+			})
+			// archive
+			.addCase(archiveGlossaryTermThunk.pending, (state) => {
+				state.loading = true;
+				state.error = null;
+			})
+			.addCase(archiveGlossaryTermThunk.fulfilled, (state, action) => {
+				state.loading = false;
+				state.error = null;
+			})
+			.addCase(archiveGlossaryTermThunk.rejected, (state, action) => {
+				state.loading = false;
+				state.error = Array.isArray(action.payload)
+					? action.payload.join(", ")
+					: action.payload || "Failed to archive glossary term.";
 			});
 	},
 });
