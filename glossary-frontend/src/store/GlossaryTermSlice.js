@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
 	getPaginatedGlossaryTerms,
 	createGlossaryTerm,
+	publishGlossaryTerm,
 } from "../services/GlossaryTermService";
 
 export const fetchGlossaryTerms = createAsyncThunk(
@@ -21,6 +22,15 @@ export const createGlossaryTermThunk = createAsyncThunk(
 	"glossaryTerms/createGlossaryTerm",
 	async ({ term, definition, token }, thunkAPI) => {
 		const result = await createGlossaryTerm(term, definition, token);
+		if (result.errors) return thunkAPI.rejectWithValue(result.errors);
+		return result.message;
+	}
+);
+
+export const publishGlossaryTermThunk = createAsyncThunk(
+	"glossary/publishGlossaryTerm",
+	async ({ id, term, definition, token }, thunkAPI) => {
+		const result = await publishGlossaryTerm(id, term, definition, token);
 		if (result.errors) return thunkAPI.rejectWithValue(result.errors);
 		return result.message;
 	}
@@ -91,6 +101,22 @@ const glossaryTermsSlice = createSlice({
 				state.error = Array.isArray(action.payload)
 					? action.payload.join(", ")
 					: action.payload || "Failed to create glossary term.";
+			})
+
+			// publish
+			.addCase(publishGlossaryTermThunk.pending, (state) => {
+				state.loading = true;
+				state.error = null;
+			})
+			.addCase(publishGlossaryTermThunk.fulfilled, (state, action) => {
+				state.loading = false;
+				state.error = null;
+			})
+			.addCase(publishGlossaryTermThunk.rejected, (state, action) => {
+				state.loading = false;
+				state.error = Array.isArray(action.payload)
+					? action.payload.join(", ")
+					: action.payload || "Failed to publish glossary term.";
 			});
 	},
 });

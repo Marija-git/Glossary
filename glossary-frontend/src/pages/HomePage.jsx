@@ -1,4 +1,4 @@
-import GlossaryList from "../components/GlossaryTermsView";
+import GlossaryTermsView from "../components/GlossaryTermsView";
 import GlossaryCard from "../components/GlossaryCard";
 import GlossaryPagination from "../components/GlossaryPagination";
 import GlossaryNavbar from "../components/GlossaryNavbar";
@@ -39,7 +39,7 @@ const HomePage = () => {
 			<div className='container mt-4'>
 				{isLoggedIn && <GlossaryCard />}
 				{loading && <p>Loading terms...</p>}
-				<GlossaryList glossaryTerms={glossaryTerms} />
+				<GlossaryTermsView glossaryTerms={glossaryTerms} />
 				<GlossaryPagination
 					pageIndex={pageIndex}
 					pageSize={pageSize}

@@ -2,21 +2,43 @@ import { useState } from "react";
 import { Table } from "react-bootstrap";
 import GlossaryModal from "./GlossaryModal";
 import ActionsColumn from "./ActionsColumn";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import {
+	publishGlossaryTermThunk,
+	fetchGlossaryTerms,
+} from "../store/GlossaryTermSlice";
+import { toast } from "react-toastify";
 
-const GlossaryList = ({ glossaryTerms }) => {
+const GlossaryTermsView = ({ glossaryTerms }) => {
+	const dispatch = useDispatch();
+	const token = useSelector((state) => state.auth.token);
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [selectedglossaryTerms, setSelectedglossaryTerms] = useState(null);
+	const [selectedglossaryTerm, setSelectedglossaryTerm] = useState(null);
 	const isLoggedIn = useSelector((state) => state.auth.isAuthenticated);
 
 	const handlePublishClick = (term) => {
-		setSelectedglossaryTerms(term);
+		setSelectedglossaryTerm(term);
 		setIsModalOpen(true);
 	};
 
-	const handlePublish = (updatedData) => {
-		console.log("Published/Updated term:", updatedData);
-		setIsModalOpen(false);
+	const handlePublish = async (updatedData) => {
+		console.log("hello");
+		if (!selectedglossaryTerm) return;
+
+		const { term, definition } = updatedData;
+		const { id } = selectedglossaryTerm;
+
+		const resultAction = await dispatch(
+			publishGlossaryTermThunk({ id, term, definition, token })
+		);
+
+		if (publishGlossaryTermThunk.fulfilled.match(resultAction)) {
+			toast.success(resultAction.payload);
+			dispatch(fetchGlossaryTerms({ pageIndex: 1, pageSize: 3, token }));
+			setIsModalOpen(false);
+		} else {
+			toast.error(resultAction.payload);
+		}
 	};
 	return (
 		<div className='p-4'>
@@ -40,7 +62,7 @@ const GlossaryList = ({ glossaryTerms }) => {
 								<td>{term.status}</td>
 								{isLoggedIn && (
 									<ActionsColumn
-										glossaryTerms={term}
+										item={term}
 										onPublishClick={handlePublishClick}
 										onDelete={(term) => console.log("Deleted:", term)}
 										onArchive={(term) => console.log("Archived:", term)}
@@ -56,10 +78,10 @@ const GlossaryList = ({ glossaryTerms }) => {
 				onClose={() => setIsModalOpen(false)}
 				onSubmit={handlePublish}
 				mode='update'
-				initialData={selectedglossaryTerms}
+				initialData={selectedglossaryTerm}
 			/>
 		</div>
 	);
 };
 
-export default GlossaryList;
+export default GlossaryTermsView;
