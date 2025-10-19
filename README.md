@@ -98,7 +98,7 @@ The system provides authentication, role-based access control, term publishing, 
    
 5. Ensure a PostgreSQL database named GlossaryDb exists.
 6. Run the backend project
-7. You can also access Swagger UI
+7. You can also access Swagger UI : https://localhost:7163/swagger/index.html
 
 ### Frontend
 
@@ -224,4 +224,41 @@ The system provides authentication, role-based access control, term publishing, 
     - Plan: Move this logic into a private helper method within GlossaryTermsService.
     - For future scalability, extract it into a shared AuthorizationHelper class.
     - This would reduce code duplication and simplify unit testing.
+
+
+## Screenshots
+
+### Login Form
+
+<img width="552" height="453" alt="Image" src="https://github.com/user-attachments/assets/8c3de0bb-2503-4ff6-8086-93adb59787d6" />
+
+---
+
+### Register Form
+
+<img width="677" height="620" alt="Image" src="https://github.com/user-attachments/assets/92aa5a02-51e3-41b0-8f78-76e052f4855f" />
+
+---
+
+### Unauthenticated User View
+
+<img width="1441" height="437" alt="Image" src="https://github.com/user-attachments/assets/3533e405-5106-42e8-b4dc-d01c6f292aaa" />
+
+---
+
+### Authenticated User View
+
+<img width="1394" height="593" alt="Image" src="https://github.com/user-attachments/assets/df2ecd12-f0c9-4f41-8d30-4b9cbcc5cd02" />
+
+---
+
+### Creating a Term
+
+<img width="1330" height="748" alt="Image" src="https://github.com/user-attachments/assets/4c326a85-f00e-4ac7-8d2b-47b597bdfcbb" />
+
+---
+
+### Notification Message
+
+<img width="964" height="552" alt="Image" src="https://github.com/user-attachments/assets/61c56d70-10f4-44fd-8f13-905f7eb9480d" />
 
