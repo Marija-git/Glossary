@@ -1,96 +1,17 @@
-
-
 using Glossary.API.Middlewares;
-using Glossary.API.Profiles;
-using Glossary.BusinessLogic.Configurations;
-using Glossary.BusinessLogic.Services;
 using Glossary.BusinessLogic.Services.Interfaces;
-using Glossary.DataAccess.AppData;
-using Glossary.DataAccess.Entities;
-using Glossary.DataAccess.Repositories;
-using Glossary.DataAccess.Repositories.Interfaces;
-using Glossary.DataAccess.SeedData;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using System.Text;
+using Glossary.API.Extensions;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddScoped<IDataSeederService, DataSeederService>();
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IGlossaryTermsRepository, GlossaryTermsRepository>();
-builder.Services.AddScoped<IGlossaryTermsService, GlossaryTermsService>();
-builder.Services.AddScoped<IForbiddenWordsRepository, ForbiddenWordsRepository>();
-
-builder.Services.Configure<GlossarySettings>(builder.Configuration.GetSection("GlossarySettings"));
-
-var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("cors", policy =>
-    {
-        policy.WithOrigins(allowedOrigins)
-              .AllowAnyMethod()
-              .WithHeaders("Content-Type", "Authorization");
-    });
-});
-
-builder.Services.AddControllers();
-builder.Services.AddDbContext<GlossaryDbContext>(options =>
-options.UseNpgsql(builder.Configuration.GetConnectionString("GlossaryDb")));
-builder.Services.AddScoped<IDataSeeder, DataSeeder>();
-builder.Services.AddIdentity<User, IdentityRole>()
-    .AddEntityFrameworkStores<GlossaryDbContext>();
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidAudience = builder.Configuration["Jwt:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
-        };
-    });
-builder.Services.AddAuthorization();
-builder.Services.AddScoped<ErrorHandlingMiddleware>();
-builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
-builder.Services.AddEndpointsApiExplorer();
-//Swagger konfiguracija za JWT
-builder.Services.AddSwaggerGen(c =>
-{
-    c.AddSecurityDefinition("bearerAuth", new OpenApiSecurityScheme
-    {
-        Type = SecuritySchemeType.Http,
-        Scheme = "Bearer"
-    });
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement
-       {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "bearerAuth" }
-            },
-           []
-        }
-       });
-});
-
+AppConfigurations.ConfigureServices(builder.Services, builder.Configuration);
+AppConfigurations.ConfigureCors(builder.Services, builder.Configuration);
+AppConfigurations.ConfigureAuthentication(builder.Services, builder.Configuration);
+AppConfigurations.ConfigureSwagger(builder.Services);
+AppConfigurations.ConfigureMiddlewares(builder.Services);
 
 var app = builder.Build();
-
-// Configure the HTTP request pipeline.
 
 if (app.Environment.IsDevelopment())
 {
