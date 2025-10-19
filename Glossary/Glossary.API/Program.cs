@@ -1,9 +1,17 @@
 using Glossary.API.Middlewares;
 using Glossary.BusinessLogic.Services.Interfaces;
 using Glossary.API.Extensions;
+using Serilog;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .CreateLogger();
+
+builder.Host.UseSerilog(); 
 
 AppConfigurations.ConfigureServices(builder.Services, builder.Configuration);
 AppConfigurations.ConfigureCors(builder.Services, builder.Configuration);

@@ -14,6 +14,7 @@ using Microsoft.OpenApi.Models;
 using Glossary.API.Middlewares;
 using Glossary.API.Profiles;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 namespace Glossary.API.Extensions
 {
@@ -98,5 +99,6 @@ namespace Glossary.API.Extensions
         {
             services.AddScoped<ErrorHandlingMiddleware>();
         }
+
     }
 }
