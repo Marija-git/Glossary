@@ -16,6 +16,8 @@ The system provides authentication, role-based access control, term publishing, 
 - Microsoft Identity — User identity, authentication, and authorization
 - Serilog — Structured logging for debugging and analysis
 - Custom Exception Middleware — Global error handling and standardized API responses
+- xUnit - Unit tests
+- Moq - Mocking dependencies
 
 ### Frontend
 
@@ -27,12 +29,6 @@ The system provides authentication, role-based access control, term publishing, 
 ### Database
 
 - PostgreSQL
-
----
-
-## Testing
-- xUnit - Unit and integration tests
-- Moq - Mocking dependencies for isolated testing
 
 ---
 
@@ -114,7 +110,7 @@ The system provides authentication, role-based access control, term publishing, 
 
 - appsettings.json is not included in the repository and must be created manually.
 - When the application starts for the first time, seed data will be automatically inserted into the database if no users or terms or forbidden words exist.
-- you can add your own value for jwt key and make sure to enter valid connection string in appsettings.json
+- you can add your own value for **jwt key** and make sure to enter valid **connection string** in appsettings.json
 
 ---
 
@@ -159,7 +155,7 @@ The system provides authentication, role-based access control, term publishing, 
 ### Signup
 
 - Fill in: Email, Unique username, Password.
-- After registration, the user is redirected to the homepage.
+- After registration, the user is redirected to the login form.
 
 ###  Homepage Overview
 - Navbar: App name, login/logout links
@@ -198,7 +194,7 @@ The system provides authentication, role-based access control, term publishing, 
 
 ## Error Handling
 - A centralized exception middleware globally handles all exceptions.
-- It translates them into clear, standardized responses with appropriate HTTP status codes.
+- It translates them into standardized responses with appropriate HTTP status codes.
 - Data validation is enforced with Data Annotation attributes, ensuring only valid inputs are processed.
 
 ---
