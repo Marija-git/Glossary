@@ -13,7 +13,7 @@ function App() {
 					element={<AuthPage />}
 				/>
 				<Route
-					path='/homepage'
+					path='/'
 					element={<HomePage />}
 				/>
 			</Routes>

@@ -22,7 +22,7 @@ const GlossaryNavbar = () => {
 			<Container>
 				<Navbar.Brand
 					as={Link}
-					to='/homepage'>
+					to='/'>
 					Glossary App
 				</Navbar.Brand>
 

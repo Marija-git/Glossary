@@ -34,7 +34,7 @@ const AuthPage = () => {
 				loginUser({ username: form.username, password: form.password })
 			);
 			if (result.type.endsWith("fulfilled")) {
-				navigate("/homepage");
+				navigate("/");
 			}
 		} else {
 			result = await dispatch(
@@ -54,7 +54,7 @@ const AuthPage = () => {
 
 	useEffect(() => {
 		if (isAuthenticated) {
-			navigate("/homepage");
+			navigate("/");
 		}
 	}, [isAuthenticated, navigate]);
 
